@@ -1,0 +1,4 @@
+rootProject.name = 'kpay-point'
+include 'api'
+include 'core'
+

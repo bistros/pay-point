@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: kakapay-point
+server:
+  port: 5000

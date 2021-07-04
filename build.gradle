@@ -1,0 +1,80 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "io.freefair.gradle:lombok-plugin:4.1.6"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.4.8"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
+    }
+}
+
+
+allprojects {
+    apply plugin: "java"
+    group 'com.kpay.point'
+    version '0.0.1-SNAPSHOT'
+    sourceCompatibility = JavaVersion.VERSION_11
+}
+
+
+//https://hororolol.tistory.com/544
+subprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+
+    apply plugin: "java"
+    apply plugin: "org.springframework.boot"
+    apply plugin: "io.spring.dependency-management"
+    sourceCompatibility = JavaVersion.VERSION_11
+
+    ext {
+        set('springCloudVersion', "2020.0.3")
+    }
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        implementation 'org.apache.commons:commons-lang3:3.11'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+    test {
+        useJUnitPlatform()
+    }
+
+}
+
+project(":api") {
+    dependencies {
+        compile project(":core")
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    }
+
+    bootJar.enabled = true
+}
+project(":core") {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//        testRuntimeOnly 'com.h2database:h2'
+        runtimeOnly 'com.h2database:h2'
+    }
+    bootJar.enabled = false
+    jar.enabled = true
+}

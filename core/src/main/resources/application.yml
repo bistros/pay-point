@@ -1,0 +1,18 @@
+spring:
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.H2Dialect
+      show-sql: true
+      format_sql: true
+    show-sql: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    generate-unique-name: false
